@@ -11,18 +11,8 @@ class CreateAccountEvent extends RegisterEvent {
   final String email;
   final String password;
   final String name;
-  final String phone;
-  final String confirmPassword;
-  final int avaterId;
 
-  const CreateAccountEvent({
-    required this.email,
-    required this.password,
-    required this.name,
-    required this.phone,
-    required this.confirmPassword,
-    required this.avaterId,
-  });
+  const CreateAccountEvent({required this.email, required this.password, required this.name});
 
   @override
   List<Object> get props => [email, password, name];
