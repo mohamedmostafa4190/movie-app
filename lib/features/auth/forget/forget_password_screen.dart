@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/l10n/app_localizations.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'forget_password_bloc.dart';
-import 'forget_password_event.dart';
-import 'forget_password_state.dart';
 import 'package:flutter_application_1/core/theme/app_colors.dart';
 import 'package:flutter_application_1/core/widgets/custom_text_field.dart';
+import 'package:flutter_application_1/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'bloc/forget_password_bloc.dart';
+import 'bloc/forget_password_event.dart';
+import 'bloc/forget_password_state.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({super.key});
@@ -53,7 +54,10 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
               ),
               title: Text(
                 locale.forgetPasswordTitle,
-                style: const TextStyle(color: AppColors.yellowColor, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  color: AppColors.yellowColor,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               centerTitle: true,
             ),
@@ -63,42 +67,56 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   showDialog(
                     context: context,
                     barrierDismissible: false,
-                    builder: (context) => const Center(child: CircularProgressIndicator()),
+                    builder: (context) =>
+                        const Center(child: CircularProgressIndicator()),
                   );
                 } else if (state is ForgetPasswordSuccess) {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       backgroundColor: Colors.green,
-                      content: Text('Password reset link sent! Check your email.'),
+                      content: Text(
+                        'Password reset link sent! Check your email.',
+                      ),
                     ),
                   );
                   Navigator.pop(context);
                 } else if (state is ForgetPasswordError) {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(backgroundColor: Colors.red, content: Text(state.errorMessage)),
+                    SnackBar(
+                      backgroundColor: Colors.red,
+                      content: Text(state.errorMessage),
+                    ),
                   );
                 }
               },
               child: SafeArea(
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40.0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24.0,
+                      vertical: 40.0,
+                    ),
                     child: Form(
                       key: _formKey,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Image.asset('assets/icon/Forgot password.png', height: 250),
+                          Image.asset(
+                            'assets/icon/Forgot password.png',
+                            height: 250,
+                          ),
                           const SizedBox(height: 50),
                           CustomTextFormField(
                             controller: _emailController,
                             hintText: locale.email,
                             prefixIcon: Icons.email_outlined,
                             validator: (value) {
-                              if (value == null || value.isEmpty || !value.contains('@')) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  !value.contains('@')) {
                                 return 'Please enter a valid email';
                               }
                               return null;
@@ -110,7 +128,9 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
                                 context.read<ForgetPasswordBloc>().add(
-                                  SendResetPasswordEvent(email: _emailController.text.trim()),
+                                  SendResetPasswordEvent(
+                                    email: _emailController.text.trim(),
+                                  ),
                                 );
                               }
                             },

@@ -1,16 +1,17 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/provider/app_provider.dart';
+import 'package:flutter_application_1/core/theme/app_colors.dart';
+import 'package:flutter_application_1/core/widgets/custom_text_field.dart';
 import 'package:flutter_application_1/l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import '../../core/routes/app_routes.dart';
-import 'login_bloc.dart';
-import 'login_event.dart';
-import 'login_state.dart';
-import 'package:flutter_application_1/core/theme/app_colors.dart';
-import 'package:flutter_application_1/core/widgets/custom_text_field.dart';
+
+import '../../../core/routes/app_routes.dart';
+import 'bloc/login_bloc.dart';
+import 'bloc/login_event.dart';
+import 'bloc/login_state.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -57,7 +58,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   showDialog(
                     context: context,
                     barrierDismissible: false,
-                    builder: (context) => const Center(child: CircularProgressIndicator()),
+                    builder: (context) =>
+                        const Center(child: CircularProgressIndicator()),
                   );
                 } else if (state is LoginSuccess) {
                   Navigator.pop(context);
@@ -65,28 +67,39 @@ class _LoginScreenState extends State<LoginScreen> {
                 } else if (state is LoginError) {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(backgroundColor: Colors.red, content: Text(state.errorMessage)),
+                    SnackBar(
+                      backgroundColor: Colors.red,
+                      content: Text(state.errorMessage),
+                    ),
                   );
                 }
               },
               child: SafeArea(
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40.0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24.0,
+                      vertical: 40.0,
+                    ),
                     child: Form(
                       key: _formKey,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Image.asset('assets/icon/316662-P9J1RJ-122 1.png', height: 100),
+                          Image.asset(
+                            'assets/icon/316662-P9J1RJ-122 1.png',
+                            height: 100,
+                          ),
                           const SizedBox(height: 50),
                           CustomTextFormField(
                             controller: _emailController,
                             hintText: locale.email,
                             prefixIcon: Icons.email_outlined,
                             validator: (value) {
-                              if (value == null || value.isEmpty || !value.contains('@')) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  !value.contains('@')) {
                                 return 'Please enter a valid email';
                               }
                               return null;
@@ -123,7 +136,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             alignment: Alignment.centerRight,
                             child: TextButton(
                               onPressed: () {
-                                Navigator.pushNamed(context, AppRoutes.forgetPasswordRoute);
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.forgetPasswordRoute,
+                                );
                               },
                               child: Text(
                                 locale.forgetPassword,
@@ -162,11 +178,15 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(context, AppRoutes.registerRoute);
+                                  Navigator.pushNamed(
+                                    context,
+                                    AppRoutes.registerRoute,
+                                  );
                                 },
                                 style: TextButton.styleFrom(
                                   padding: EdgeInsets.zero,
-                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 child: Text(
                                   locale.createOne,
@@ -183,17 +203,27 @@ class _LoginScreenState extends State<LoginScreen> {
                           Row(
                             children: [
                               Expanded(
-                                child: Divider(color: AppColors.textFieldColor, thickness: 2),
+                                child: Divider(
+                                  color: AppColors.textFieldColor,
+                                  thickness: 2,
+                                ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0,
+                                ),
                                 child: Text(
                                   locale.or,
-                                  style: const TextStyle(color: AppColors.lightTextColor),
+                                  style: const TextStyle(
+                                    color: AppColors.lightTextColor,
+                                  ),
                                 ),
                               ),
                               Expanded(
-                                child: Divider(color: AppColors.textFieldColor, thickness: 2),
+                                child: Divider(
+                                  color: AppColors.textFieldColor,
+                                  thickness: 2,
+                                ),
                               ),
                             ],
                           ),
@@ -201,7 +231,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           ElevatedButton.icon(
                             style: filledButtonStyle,
                             onPressed: () {
-                              context.read<LoginBloc>().add(const SignInWithGoogleEvent());
+                              context.read<LoginBloc>().add(
+                                const SignInWithGoogleEvent(),
+                              );
                             },
                             icon: SvgPicture.asset(
                               'assets/icon/icon_google.svg',
@@ -246,6 +278,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildFlagCircle(String imagePath) {
-    return ClipOval(child: Image.asset(imagePath, width: 32, height: 32, fit: BoxFit.cover));
+    return ClipOval(
+      child: Image.asset(imagePath, width: 32, height: 32, fit: BoxFit.cover),
+    );
   }
 }
