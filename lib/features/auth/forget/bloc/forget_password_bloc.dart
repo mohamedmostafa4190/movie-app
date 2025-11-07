@@ -4,7 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'forget_password_event.dart';
 import 'forget_password_state.dart';
 
-class ForgetPasswordBloc extends Bloc<ForgetPasswordEvent, ForgetPasswordState> {
+class ForgetPasswordBloc
+    extends Bloc<ForgetPasswordEvent, ForgetPasswordState> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   ForgetPasswordBloc() : super(ForgetPasswordInitial()) {
