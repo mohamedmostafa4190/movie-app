@@ -7,9 +7,9 @@ import 'package:flutter_application_1/l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
-import 'register_bloc.dart';
-import 'register_event.dart';
-import 'register_state.dart';
+import 'bloc/register_bloc.dart';
+import 'bloc/register_event.dart';
+import 'bloc/register_state.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -25,6 +25,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _phoneController = TextEditingController();
+  int _avatarId = 1;
 
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
@@ -82,7 +83,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               title: Text(
                 locale.register,
-                style: const TextStyle(color: AppColors.yellowColor, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  color: AppColors.yellowColor,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               centerTitle: true,
             ),
@@ -92,28 +96,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   showDialog(
                     context: context,
                     barrierDismissible: false,
-                    builder: (context) => const Center(child: CircularProgressIndicator()),
+                    builder: (context) =>
+                        const Center(child: CircularProgressIndicator()),
                   );
                 } else if (state is RegisterSuccess) {
                   Navigator.pop(context);
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
+                    SnackBar(
                       backgroundColor: Colors.green,
-                      content: Text('Account Created Successfully! Please Login.'),
+                      content: Text('User created successfully'),
                     ),
                   );
                 } else if (state is RegisterError) {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(backgroundColor: Colors.red, content: Text(state.errorMessage)),
+                    SnackBar(
+                      backgroundColor: Colors.red,
+                      content: Text(state.errorMessage),
+                    ),
                   );
                 }
               },
               child: SafeArea(
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24.0,
+                      vertical: 20.0,
+                    ),
                     child: Form(
                       key: _formKey,
                       child: Column(
@@ -132,7 +143,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       padding: EdgeInsets.symmetric(
                                         horizontal: index == 0 ? 0 : 10,
                                       ),
-                                      child: _buildAvatar(index, _avatarPaths[index]),
+                                      child: _buildAvatar(
+                                        index,
+                                        _avatarPaths[index],
+                                      ),
                                     );
                                   },
                                 ),
@@ -165,7 +179,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             hintText: locale.email,
                             prefixIcon: Icons.email_outlined,
                             validator: (value) {
-                              if (value == null || value.isEmpty || !value.contains('@')) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  !value.contains('@')) {
                                 return 'Please enter a valid email';
                               }
                               return null;
@@ -212,7 +228,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                               onPressed: () {
                                 setState(() {
-                                  _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                                  _isConfirmPasswordVisible =
+                                      !_isConfirmPasswordVisible;
                                 });
                               },
                             ),
@@ -242,9 +259,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               if (_formKey.currentState!.validate()) {
                                 context.read<RegisterBloc>().add(
                                   CreateAccountEvent(
+                                    avaterId: _avatarId,
+                                    name: _nameController.text.trim(),
                                     email: _emailController.text.trim(),
                                     password: _passwordController.text.trim(),
-                                    name: _nameController.text.trim(),
+                                    confirmPassword: _confirmPasswordController
+                                        .text
+                                        .trim(),
+                                    phone: _phoneController.text.trim(),
                                   ),
                                 );
                               }
@@ -268,7 +290,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 },
                                 style: TextButton.styleFrom(
                                   padding: EdgeInsets.zero,
-                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 child: Text(
                                   locale.login,
@@ -324,6 +347,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       onTap: () {
         setState(() {
           _selectedAvatarIndex = index;
+          _avatarId = index;
         });
       },
       child: AnimatedContainer(
@@ -332,7 +356,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         height: size,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: isSelected ? Border.all(color: AppColors.yellowColor, width: 3) : null,
+          border: isSelected
+              ? Border.all(color: AppColors.yellowColor, width: 3)
+              : null,
         ),
         child: ClipOval(child: Image.asset(imagePath, fit: BoxFit.cover)),
       ),
@@ -340,6 +366,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _buildFlagCircle(String imagePath) {
-    return ClipOval(child: Image.asset(imagePath, width: 32, height: 32, fit: BoxFit.cover));
+    return ClipOval(
+      child: Image.asset(imagePath, width: 32, height: 32, fit: BoxFit.cover),
+    );
   }
 }
